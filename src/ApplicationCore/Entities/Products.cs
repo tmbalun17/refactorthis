@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Data.SqlClient;
-using Newtonsoft.Json;
+﻿using Ardalis.GuardClauses;
+using System.Collections.Generic;
 
 namespace ApplicationCore.Models
 {
     public class Products
     {
-        public List<Product> Items { get; set; }
+        public Products(IEnumerable<Product> products)
+        {
+            Guard.Against.Null(products, nameof(products));
+            Items = products;
+        }
+        public IEnumerable<Product> Items { get; private set; }
     }
 }

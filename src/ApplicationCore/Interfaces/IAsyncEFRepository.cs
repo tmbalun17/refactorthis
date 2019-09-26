@@ -9,9 +9,9 @@ namespace ApplicationCore.Interfaces
 {
     public interface IAsyncRepository<T> where T : BaseEntity
     {
-        Task<T> GetByIdAsync(int id);
+        Task<T> GetByIdAsync(Guid id);
         Task<IReadOnlyList<T>> ListAllAsync();
-        Task<IReadOnlyList<T>> ListAsync(Expression<Func<T, bool>> whereFilter, Expression<Func<T, object>> orderBy, Expression<Func<T, object>> orderByDescending);
+        Task<IReadOnlyList<T>> ListAsync(Expression<Func<T, bool>> whereFilter, Expression<Func<T, object>> orderBy = null, Expression<Func<T, object>> orderByDescending = null);
         Task<T> AddAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
