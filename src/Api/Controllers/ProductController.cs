@@ -93,6 +93,8 @@ namespace Api.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(Guid id)
         {
+            //TODO: Can be done using cascade delete or this needs a transaction but for now will do
+            await _productOptionsRepository.DeleteAsync(po => po.ProductId == id);
             await _productRepository.DeleteAsync(new Product { Id = id });
             return Accepted();
         }
@@ -145,7 +147,7 @@ namespace Api.Controllers
                 Description = productOption.Description,
             };
             var savedProductOption = await _productOptionsRepository.AddAsync(productOptionModel);
-            return CreatedAtAction(nameof(GetProductOption), new { id = savedProductOption.Id }, savedProductOption);
+            return CreatedAtAction(nameof(GetProductOption), new { id = savedProductOption.ProductId, optionId = savedProductOption.Id  }, savedProductOption);
         }
 
         [HttpPut]

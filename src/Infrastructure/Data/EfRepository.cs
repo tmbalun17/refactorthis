@@ -67,5 +67,14 @@ namespace Infrastructure.Data
             _dbContext.Entry(entity).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }
+
+         public async Task DeleteAsync(Expression<Func<T, bool>> whereFilter)
+        {
+            var records = await _dbContext.Set<T>().AsQueryable().Where(whereFilter).ToListAsync();
+            if (records.Count > 0)
+            {
+                _dbContext.Set<T>().RemoveRange(records);
+            }
+        }
     }
 }
