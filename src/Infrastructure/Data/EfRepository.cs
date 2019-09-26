@@ -33,14 +33,14 @@ namespace Infrastructure.Data
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(Guid id)
         {
             return await _dbContext.Set<T>().FindAsync(id);
         }
 
         public async Task<IReadOnlyList<T>> ListAllAsync()
         {
-               return await _dbContext.Set<T>().ToListAsync();
+            return await _dbContext.Set<T>().ToListAsync();
         }
 
         public async Task<IReadOnlyList<T>> ListAsync(Expression<Func<T, bool>> whereFilter, Expression<Func<T, object>> orderBy = null, Expression<Func<T, object>> orderByDescending = null)

@@ -1,4 +1,5 @@
-﻿using Infrastructure.Data;
+﻿using ApplicationCore.Interfaces;
+using Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -23,15 +24,19 @@ namespace Api
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddApiVersioning();
-
+            services.AddVersionedApiExplorer( options => options.GroupNameFormat = "'v'V" );
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Products API", Version = "v1.0" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Products API", Version = "v1" });
             });
 
             services.AddDbContext<ProductContext>(c =>
                 c.UseSqlServer(Configuration.GetConnectionString("ProductDBConnection")));
+
+            services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IProductOptionRepository, ProductOptionRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

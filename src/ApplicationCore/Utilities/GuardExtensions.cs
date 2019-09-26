@@ -7,10 +7,10 @@ namespace Ardalis.GuardClauses
 {
     public static class GuidGuards
     {
-        public static void NullGuid(this IGuardClause guardClause, Guid Id)
+        public static void NullGuid(this IGuardClause guardClause, Guid Id, string parameterName)
         {
             if (Id == Guid.Empty)
-                throw new ArgumentException("Id cannot be Null");
+                throw new ArgumentException($"{parameterName} cannot be Empty");
         }
     }
 }

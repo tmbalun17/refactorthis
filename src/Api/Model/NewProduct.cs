@@ -1,11 +1,13 @@
-﻿using ApplicationCore.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace ApplicationCore.Models
+namespace Api.Model
 {
-    public class Product: BaseEntity
+    public class NewProduct
     {
         [Required(AllowEmptyStrings=false, ErrorMessage = "Name is required.")]
         [StringLength(100, MinimumLength = 1)]
