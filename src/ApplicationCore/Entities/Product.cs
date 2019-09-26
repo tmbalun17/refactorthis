@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ApplicationCore.Entities;
+using System;
 
 namespace ApplicationCore.Models
 {
@@ -11,18 +12,5 @@ namespace ApplicationCore.Models
         public decimal Price { get; set; }
 
         public decimal DeliveryPrice { get; set; }
-        
-        [JsonIgnore]
-        public bool IsNew { get; }
-
-        public Product()
-        {
-            Id = Guid.NewGuid();
-           
-        }
-
-       
-
-       
     }
 }
