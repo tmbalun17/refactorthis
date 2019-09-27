@@ -12,9 +12,13 @@ namespace Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private string _contentRootPath = "";
+        
+        public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
             Configuration = configuration;
+            //20160718 JPC enable portable dev database
+            _contentRootPath = env.ContentRootPath;
         }
 
         public IConfiguration Configuration { get; }
@@ -31,8 +35,14 @@ namespace Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Products API", Version = "v1" });
             });
 
+            string conn = Configuration.GetConnectionString("ProductDBConnection");
+            if(conn.Contains("%CONTENTROOTPATH%"))
+            {
+                conn = conn.Replace("%CONTENTROOTPATH%", _contentRootPath);
+            }
+
             services.AddDbContext<ProductContext>(c =>
-                c.UseSqlServer(Configuration.GetConnectionString("ProductDBConnection")));
+                c.UseSqlServer(conn));
 
             services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
             services.AddScoped<IProductRepository, ProductRepository>();
