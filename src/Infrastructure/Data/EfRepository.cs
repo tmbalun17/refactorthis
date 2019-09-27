@@ -42,7 +42,7 @@ namespace Infrastructure.Data
             return await _dbContext.Set<T>().ToListAsync();
         }
 
-        public async Task<IReadOnlyList<T>> ListAsync(Expression<Func<T, bool>> whereFilter, Expression<Func<T, object>> orderBy = null, Expression<Func<T, object>> orderByDescending = null)
+        public async Task<IReadOnlyList<T>> ListAsync(Expression<Func<T, bool>> whereFilter = null, Expression<Func<T, object>> orderBy = null, Expression<Func<T, object>> orderByDescending = null)
         {
             var query = _dbContext.Set<T>().AsQueryable();
             if (whereFilter != null)
@@ -73,6 +73,7 @@ namespace Infrastructure.Data
             if (records.Count > 0)
             {
                 _dbContext.Set<T>().RemoveRange(records);
+                 await _dbContext.SaveChangesAsync();
             }
         }
     }

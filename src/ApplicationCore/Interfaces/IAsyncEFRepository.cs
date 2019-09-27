@@ -11,7 +11,7 @@ namespace ApplicationCore.Interfaces
     {
         Task<T> GetByIdAsync(Guid id);
         Task<IReadOnlyList<T>> ListAllAsync();
-        Task<IReadOnlyList<T>> ListAsync(Expression<Func<T, bool>> whereFilter, Expression<Func<T, object>> orderBy = null, Expression<Func<T, object>> orderByDescending = null);
+        Task<IReadOnlyList<T>> ListAsync(Expression<Func<T, bool>> whereFilter = null, Expression<Func<T, object>> orderBy = null, Expression<Func<T, object>> orderByDescending = null);
         Task<T> AddAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
