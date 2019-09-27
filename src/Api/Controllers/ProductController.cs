@@ -29,18 +29,22 @@ namespace Api.Controllers
 
         #region Product CRUD
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery]string name)
+        public async Task<IActionResult> GetAllAsync([FromQuery]string name)
         {
             IEnumerable<Product> allProducts = String.IsNullOrEmpty(name) ?
                                 await _productRepository.ListAllAsync()
                                 : await _productRepository.ListAsync(p => p.Name == name);
+            
+            if(allProducts == null)
+                return null;
+
             var products = new Products(allProducts);
-            return Ok(allProducts);
+            return Ok(products);
         }
 
         [Route("{id}")]
         [HttpGet]
-        public async Task<IActionResult> GetProduct(Guid id)
+        public async Task<IActionResult> GetProductAsync(Guid id)
         {
             Guard.Against.NullGuid(id, nameof(id));
             var product = await _productRepository.GetByIdAsync(id);
@@ -52,7 +56,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(NewProduct product)
+        public async Task<IActionResult> CreateAsync(NewProduct product)
         {
             if (!ModelState.IsValid)
             {
@@ -71,11 +75,11 @@ namespace Api.Controllers
                 DeliveryPrice = product.DeliveryPrice
             };
             var savedProduct = await _productRepository.AddAsync(productModel);
-            return CreatedAtAction(nameof(GetProduct), new { id = savedProduct.Id }, savedProduct);
+            return CreatedAtAction(nameof(GetProductAsync), new { id = savedProduct.Id }, savedProduct);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(Product product)
+        public async Task<IActionResult> UpdateAsync(Product product)
         {
             if (!ModelState.IsValid)
             {
@@ -91,7 +95,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> DeleteAsync(Guid id)
         {
             //TODO: Can be done using cascade delete or this needs a transaction but for now will do
             await _productOptionsRepository.DeleteAsync(po => po.ProductId == id);
@@ -102,7 +106,7 @@ namespace Api.Controllers
 
         [HttpGet]
         [Route("{id}/options")]
-        public async Task<IActionResult> GetAllOptions(Guid id)
+        public async Task<IActionResult> GetAllOptionsAsync(Guid id)
         {
             Guard.Against.NullGuid(id, nameof(id));
             IEnumerable<ProductOption> allProductOptions = await _productOptionsRepository.ListAsync(po => po.ProductId == id);
@@ -112,7 +116,7 @@ namespace Api.Controllers
 
         [Route("{id}/options/{optionId}")]
         [HttpGet]
-        public async Task<IActionResult> GetProductOption(Guid id, Guid optionId)
+        public async Task<IActionResult> GetProductOptionAsync(Guid id, Guid optionId)
         {
             Guard.Against.NullGuid(id, nameof(id));
             Guard.Against.NullGuid(optionId, nameof(optionId));
@@ -127,7 +131,7 @@ namespace Api.Controllers
 
         [HttpPost]
         [Route("{id}/options")]
-        public async Task<IActionResult> CreateOption(Guid id, NewProductOption productOption)
+        public async Task<IActionResult> CreateOptionAsync(Guid id, NewProductOption productOption)
         {
             Guard.Against.NullGuid(id, nameof(id));
 
@@ -147,12 +151,12 @@ namespace Api.Controllers
                 Description = productOption.Description,
             };
             var savedProductOption = await _productOptionsRepository.AddAsync(productOptionModel);
-            return CreatedAtAction(nameof(GetProductOption), new { id = savedProductOption.ProductId, optionId = savedProductOption.Id  }, savedProductOption);
+            return CreatedAtAction(nameof(GetProductOptionAsync), new { id = savedProductOption.ProductId, optionId = savedProductOption.Id  }, savedProductOption);
         }
 
         [HttpPut]
         [Route("{id}/options/{optionId}")]
-        public async Task<IActionResult> UpdateOption(Guid id, Guid optionId, UpdateProductOption productOption)
+        public async Task<IActionResult> UpdateOptionAsync(Guid id, Guid optionId, UpdateProductOption productOption)
         {
             Guard.Against.NullGuid(id, nameof(id));
             Guard.Against.NullGuid(optionId, nameof(optionId));
@@ -179,7 +183,7 @@ namespace Api.Controllers
 
         [HttpDelete]
         [Route("{id}/options/{optionId}")]
-        public async Task<IActionResult> DeleteOption(Guid id, Guid optionId)
+        public async Task<IActionResult> DeleteOptionAsync(Guid id, Guid optionId)
         {
             Guard.Against.NullGuid(id, nameof(id));
             Guard.Against.NullGuid(optionId, nameof(optionId));
